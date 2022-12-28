@@ -48,7 +48,7 @@ async function mongodbConnect() {
     app.put("/updateLoveReaction", async (req, res) => {
       const { id } = req.query;
       const data = req.body;
-      console.log(typeof data);
+      // console.log(typeof data);
       const query = { _id: ObjectId(id) };
       const options = { upsert: true };
       const updateData = {
@@ -56,14 +56,14 @@ async function mongodbConnect() {
           LoveCount: data.LoveCount + 1,
         },
       };
-      console.log(updateData);
+      // console.log(updateData);
       const result = postWebsiteAllPost.updateOne(query, updateData, options);
       // console.log(result);
       res.send(result);
     });
     app.put("/updateLikeReaction", async (req, res) => {
       const { id } = req.query;
-      console.log(id);
+      // console.log(id);
       const data = req.body;
       const query = { _id: ObjectId(id) };
       const options = { upsert: true };
@@ -72,7 +72,7 @@ async function mongodbConnect() {
           LikeCount: data.LikeCount + 1,
         },
       };
-      console.log(updateData);
+      // console.log(updateData);
       const result = postWebsiteAllPost.updateOne(query, updateData, options);
       // console.log(result);
       res.send(result);
@@ -106,10 +106,10 @@ async function mongodbConnect() {
 
     app.put("/EditAbout", async (req, res) => {
       const postEditID = req.body.postEditID;
-      // console.log(postEditID);
+      console.log(postEditID);
       const filter = { _id: ObjectId(postEditID) };
       console.log(filter);
-      // const user = req.body;
+      const user = req.body;
       // console.log(user);
       const option = { upsert: true };
       const updatedUser = {
@@ -125,6 +125,7 @@ async function mongodbConnect() {
         updatedUser,
         option
       );
+      res.send(result);
       // console.log(result);
     });
     // postWebsiteAllPost.insertOne(abdul);
@@ -143,7 +144,7 @@ async function mongodbConnect() {
         .limit(3)
         .sort({ LikeCount: -1, LoveCount: -1 })
         .toArray();
-      console.log(popularPost);
+      // console.log(popularPost);
       res.send(popularPost);
     });
   } finally {
