@@ -26,12 +26,14 @@ const client = new MongoClient(uri, {
 async function mongodbConnect() {
   try {
     const postWebsiteAllPost = client.db("postWebsite").collection("allPost");
+
     const postWebsiteEditPost = client
       .db("postWebsite")
       .collection("allEditPost");
-    // const abdul = {
-    //   abdul: "abdul",
-    // };
+
+    const postWebsiteAllComment = client
+      .db("postWebsite")
+      .collection("allComment");
 
     app.post("/allPost", async (req, res) => {
       const body = req.body;
@@ -73,7 +75,11 @@ async function mongodbConnect() {
         },
       };
       // console.log(updateData);
-      const result = postWebsiteAllPost.updateOne(query, updateData, options);
+      const result = await postWebsiteAllPost.updateOne(
+        query,
+        updateData,
+        options
+      );
       // console.log(result);
       res.send(result);
     });
@@ -142,10 +148,25 @@ async function mongodbConnect() {
       const popularPost = await postWebsiteAllPost
         .find({})
         .limit(3)
-        .sort({ LikeCount: -1, LoveCount: -1 })
+        .sort({ LoveCount: -1 })
         .toArray();
       // console.log(popularPost);
       res.send(popularPost);
+    });
+    app.post("/comments", async (req, res) => {
+      const data = req.body;
+      const dataPosted = await postWebsiteAllComment.insertOne(data);
+      res.send(dataPosted);
+    });
+    app.get("/comments", async (req, res) => {
+      const { id } = req.query;
+      const query = { postId: id };
+      const comment = await postWebsiteAllComment
+        .find(query)
+        .sort({ _id: -1 })
+        .toArray();
+      console.log(comment);
+      res.send(comment);
     });
   } finally {
   }
