@@ -35,6 +35,7 @@ async function mongodbConnect() {
       .db("postWebsite")
       .collection("allComment");
 
+    // insert one by one post
     app.post("/allPost", async (req, res) => {
       const body = req.body;
       //   console.log(body);
@@ -42,11 +43,13 @@ async function mongodbConnect() {
       res.send(result);
     });
 
+    // get all post
     app.get("/allPost", async (req, res) => {
       const result = await postWebsiteAllPost.find({}).toArray();
       res.send(result);
     });
 
+    // update love reaction
     app.put("/updateLoveReaction", async (req, res) => {
       const { id } = req.query;
       const data = req.body;
@@ -63,6 +66,9 @@ async function mongodbConnect() {
       // console.log(result);
       res.send(result);
     });
+
+    // update love  reaction
+
     app.put("/updateLikeReaction", async (req, res) => {
       const { id } = req.query;
       // console.log(id);
@@ -110,6 +116,7 @@ async function mongodbConnect() {
       res.send(result);
     });
 
+    // update about
     app.put("/EditAbout", async (req, res) => {
       const postEditID = req.body.postEditID;
       console.log(postEditID);
@@ -134,8 +141,8 @@ async function mongodbConnect() {
       res.send(result);
       // console.log(result);
     });
-    // postWebsiteAllPost.insertOne(abdul);
 
+    // post details
     app.get("/postDetails/:id", async (req, res) => {
       const { id } = req.params;
       const query = { _id: ObjectId(id) };
@@ -144,6 +151,7 @@ async function mongodbConnect() {
       res.send(result);
     });
 
+    // home popular post
     app.get("/popularPost", async (req, res) => {
       const popularPost = await postWebsiteAllPost
         .find({})
@@ -153,11 +161,17 @@ async function mongodbConnect() {
       // console.log(popularPost);
       res.send(popularPost);
     });
+
+    // upload comment
+
     app.post("/comments", async (req, res) => {
       const data = req.body;
       const dataPosted = await postWebsiteAllComment.insertOne(data);
       res.send(dataPosted);
     });
+
+    // get all commnet by id
+
     app.get("/comments", async (req, res) => {
       const { id } = req.query;
       const query = { postId: id };
